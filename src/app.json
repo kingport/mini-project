@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "pages/repair/main",
+    "pages/selectAddress/main",
+    "pages/selectTime/main",
+    "pages/index/main",
+    "pages/logs/main",
+    "pages/counter/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "填写客户基本信息",
+    "navigationBarTextStyle": "black"
+  }
+}
