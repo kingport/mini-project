@@ -1,9 +1,9 @@
 {
   "pages": [
+    "pages/index/main",
     "pages/repair/main",
     "pages/selectAddress/main",
     "pages/selectTime/main",
-    "pages/index/main",
     "pages/logs/main",
     "pages/counter/main"
   ],
