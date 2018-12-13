@@ -57,7 +57,7 @@
           @click="onSelectLocation">
           <text class="select-title-container">牙位</text>
             <div  class="repair-select-container">
-              <text>请选择</text>
+              <text>{{moochType}}</text>
               <image src='/static/右箭头.png' />
             </div>
         </div>
@@ -89,14 +89,9 @@
     <button class="next-container" type="primary" @click="onSelectTimePage">下一步</button>
     <!-- 牙齿位置选择容器 -->
     <div :style="{display: display}" class="tooth-loctaion-container">
-      <!-- 牙位置图 -->
-      <!-- <div class="tooth-image-container">
-        <image src='/static/WX20181130-142853.png' />
-      </div> -->
-      <!-- 单个牙齿位置用div模拟 -->
       <div
       v-for="(item,index) in toothImgData"
-      @click="onSelectImgtooch(index)"
+      @click="onSelectImgtooch(item,index)"
       :key="index"
       :index="index"
       :style="{top: item.top,left: item.left}"
@@ -122,6 +117,10 @@
       <div class="line-container"></div>
       <!-- 竖直横线 -->
       <div class="cloumn-container"></div>
+      <!-- 提示 -->
+      <div class="tips-container">点击选择牙位</div>
+      <!-- 确认按钮 -->
+      <button @click="onConfirmTooch" class="confirm-container">确认</button>
     </div>
   </div>
 </template>
@@ -143,6 +142,8 @@ export default {
       repairType: '请选择',
       MaterialsType: '请选择',
       ModelType: '请选择',
+      moochType: '请选择',
+      moochTypeArr: [],
       pickerValueDefault: [], // 初始化值
       pickerValueArray: [], // picker 数组值
       pickerRepairTypeArray: [
@@ -196,7 +197,7 @@ export default {
       selectToothStatus: false,
       toothImgData: null,
       pitchOnTooths: [], //选中的多个牙齿
-      pitchOnIndex: [] //选择牙齿
+      pitchOnIndex: [] //选择牙齿状态标记
     }
   },
 
@@ -238,20 +239,36 @@ export default {
     },
     // 点击选择牙齿位置
     onSelectLocation() {
+      // 每次进入之前选中的牙齿数组要清空
+      this.pitchOnTooths = []
+      this.pitchOnIndex = []
       // 显示牙位图
       this.display = 'block'
     },
     // 点击选中的牙齿图
-    onSelectImgtooch(i) {
+    onSelectImgtooch(item, i) {
       if(this.pitchOnIndex[i] === true) {
         this.pitchOnTooths.splice(i,1)
         this.pitchOnIndex[i] = false
       }else{
-        this.pitchOnTooths.unshift(i)
+        this.pitchOnTooths.unshift(item)
         this.pitchOnIndex[i] = true
       }
-      console.log(this.pitchOnTooths)
-      console.log(this.pitchOnIndex)
+      // console.log(this.pitchOnTooths)
+      // console.log(this.pitchOnIndex)
+    },
+    // 点击确认选择牙齿位置图
+    onConfirmTooch () {
+      // 选择的位置遍历
+      this.moochTypeArr = []
+      this.pitchOnTooths.map((item,index) => {
+        console.log(item.selectToothIndex)
+        this.moochTypeArr.push(item.selectToothIndex)
+      })
+      // 显示选择的位置
+      this.moochType = this.moochTypeArr.join(',')
+      // 隐藏牙位图
+      this.display = 'none'
     },
     // 点击下一步
     onSelectTimePage () {
@@ -406,5 +423,26 @@ export default {
     left: 50%;
     top: 50%;
     margin-top: -15%;
+  }
+  .tips-container {
+    position:absolute;
+    top:40vw;
+    left:50%;
+    width:30vw;
+    font-size:4.6vw;
+    color:#999;
+    margin-left: -15vw;
+  }
+  .confirm-container {
+    background: #48b8c5;
+    width: 30vw;
+    height: 10vw;
+    color: #fff;
+    position: absolute;
+    left: 50%;
+    margin-left: -15vw;
+    bottom: 40vw;
+    font-size: 3.6vw;
+    line-height: 10vw !important;
   }
 </style>
