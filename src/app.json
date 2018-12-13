@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/index/main",
     "pages/repair/main",
+    "pages/index/main",
     "pages/selectAddress/main",
     "pages/selectTime/main",
     "pages/logs/main",

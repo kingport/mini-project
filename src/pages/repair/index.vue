@@ -90,21 +90,38 @@
     <!-- 牙齿位置选择容器 -->
     <div :style="{display: display}" class="tooth-loctaion-container">
       <!-- 牙位置图 -->
-      <div class="tooth-image-container">
+      <!-- <div class="tooth-image-container">
         <image src='/static/WX20181130-142853.png' />
-      </div>
+      </div> -->
       <!-- 单个牙齿位置用div模拟 -->
-      <div 
-      :style="{
-        top: 30.5 - index *5 + 'vw',
-        left: 28 + index * 1 + 'vw'
-         }"
-      v-for="(item,index) in 4"
+      <div
+      v-for="(item,index) in toothImgData"
+      @click="onSelectImgtooch(index)"
       :key="index"
       :index="index"
+      :style="{top: item.top,left: item.left}"
       class="tooth-item-container">
 
+        <image 
+        :style="{width: 
+        item.selectToothIndex === 13  ? '10vw'
+        :item.selectToothIndex === 23 ? '10vw' 
+        :item.selectToothIndex === 45 ? '10vw'
+        :item.selectToothIndex === 44 ? '9vw'
+        :item.selectToothIndex === 43 ? '9vw' 
+        :item.selectToothIndex === 42 ? '9vw' 
+        :item.selectToothIndex === 41 ? '9vw' 
+        :item.selectToothIndex === 32 ? '9vw' 
+        :item.selectToothIndex === 33 ? '9vw' 
+        :item.selectToothIndex === 31 ? '8vw' : '12vw'
+        }"
+        :src="pitchOnIndex[index] ? item.selectImgSrc : item.imgSrc" />
+        <text :style="{color: pitchOnIndex[index] ? '#fff' : '#333'}" >{{item.selectToothIndex}}</text>
       </div>
+      <!-- 中线横条 -->
+      <div class="line-container"></div>
+      <!-- 竖直横线 -->
+      <div class="cloumn-container"></div>
     </div>
   </div>
 </template>
@@ -112,6 +129,8 @@
 <script>
 import progressBar from '@/components/progressBar'
 import mpvuePicker from 'mpvue-picker'
+import toochData from './toothImgData.json'
+
 
 export default {
   config: {
@@ -172,7 +191,12 @@ export default {
           value: 2
         }
       ],
-      pickerValueDefault: []
+      pickerValueDefault: [],
+      selectToothIndex: null,
+      selectToothStatus: false,
+      toothImgData: null,
+      pitchOnTooths: [], //选中的多个牙齿
+      pitchOnIndex: [] //选择牙齿
     }
   },
 
@@ -214,9 +238,20 @@ export default {
     },
     // 点击选择牙齿位置
     onSelectLocation() {
-      console.log('显示牙齿位置图')
       // 显示牙位图
       this.display = 'block'
+    },
+    // 点击选中的牙齿图
+    onSelectImgtooch(i) {
+      if(this.pitchOnIndex[i] === true) {
+        this.pitchOnTooths.splice(i,1)
+        this.pitchOnIndex[i] = false
+      }else{
+        this.pitchOnTooths.unshift(i)
+        this.pitchOnIndex[i] = true
+      }
+      console.log(this.pitchOnTooths)
+      console.log(this.pitchOnIndex)
     },
     // 点击下一步
     onSelectTimePage () {
@@ -228,7 +263,7 @@ export default {
         // 提示
         wx.showModal({
           title: '提示',
-          content: '请填写完成的信息'
+          content: '请填写完整的信息'
         })
       }
     },
@@ -253,6 +288,7 @@ export default {
   },
 
   onLoad () {
+    this.toothImgData = toochData
      wx.setNavigationBarTitle({
        title: '填写丽刻修复类型'
      })
@@ -301,15 +337,16 @@ export default {
   }
   .tooth-loctaion-container {
     position: absolute;
-    top: 30vw;
+    top: 0;
     left: 0;
     width: 100%;
-    min-height: 60vh;
+    min-height: 100vh;
     background: #fff;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    z-index: 99;
   }
   .tooth-image-container {
     width: 100%;
@@ -334,12 +371,40 @@ export default {
     font-size: 3.4vw;
   }
   .tooth-item-container {
-    width: 3vw;
-    height: 3vw;
-    background: red;
-    border-radius: 50%;
+    display: flex;
+    align-items: center;
     position: absolute;
     top: 0;
     left: 0;
+    justify-content: center;
+    align-items: center;
+  }
+  .tooth-item-container image {
+    width: 12vw;
+    height: 10vw;
+  }
+  .tooth-item-container text {
+    padding-left: 1vw;
+    font-size: 3.8vw;
+    position: absolute;
+  }
+  .line-container {
+    height: 1px;
+    background: #000;
+    width: 90%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -45%;
+    margin-top: -0.5vw;
+  }
+  .cloumn-container {
+    height: 20%;
+    background: #000;
+    width: 1px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -15%;
   }
 </style>
